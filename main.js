@@ -1,7 +1,7 @@
 const { utils } = require('@snapshot-labs/snapshot.js');
 const { Alchemy } = require('alchemy-sdk');
 const { fetchTokenDecimals } = require('./utils/tokenUtils');
-const { processTimestamps, processBlockResults } = require('./utils/blockUtils');
+const { processTimestamps } = require('./utils/blockUtils');
 const { abi } = require('./ERC20.json');
 const config = require('./config');
 const EthDater = require('ethereum-block-by-date');

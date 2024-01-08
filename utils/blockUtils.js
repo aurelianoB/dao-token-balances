@@ -45,4 +45,4 @@ async function processBlockResults(blockResult, blockNum, decimalsMap, treasuryD
   return results;
 }
 
-module.exports = { processTimestamps, fetchBlockResults, processBlockResults };
+module.exports = { processTimestamps };
