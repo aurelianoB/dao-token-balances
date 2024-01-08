@@ -12,8 +12,7 @@ const provider = utils.getProvider(config.network);
 const alchemy = new Alchemy(config);
 const dater = new EthDater(alchemy.core);
 
-const treasuryData = JSON.parse(fs.readFileSync('treasury_data.json', 'utf-8')).filter(org => org.chainID === config.network)//.slice(0, 1);;
-console.log(treasuryData);
+const treasuryData = JSON.parse(fs.readFileSync('treasury_data.json', 'utf-8')).filter(org => org.chainID == config.network)//.slice(0, 1);;
 const tokens = Array.from(new Set(treasuryData.flatMap(org => org.token_addresses)));
 const timestamps = JSON.parse(fs.readFileSync('timestamps.json', 'utf-8'));
 const correctedTimestamps = timestamps.map(ts =>
