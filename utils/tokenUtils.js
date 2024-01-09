@@ -6,15 +6,15 @@ async function fetchTokenDecimals(tokens, network, provider, abi) {
   const multiDecimals = new Multicaller(network, provider, abi);
 
   tokens.forEach((token) => {
-    multiDecimals.call(token, token, 'decimals');
+    multiDecimals.call(`${token}.decimals`, token, 'decimals');
   });
 
-  const decimalsResult = await multiDecimals.execute();
-  tokens.forEach((token) => {
-    decimalsMap[token] = decimalsResult[token];
+  return multiDecimals.execute().then((decimalsResult) => {
+    tokens.forEach((token) => {
+      decimalsMap[token] = decimalsResult[`${token}.decimals`];
+    });
+    return decimalsMap;
   });
-
-  return decimalsMap;
 }
 
 module.exports = { fetchTokenDecimals };

@@ -9,10 +9,15 @@ const fs = require('fs');
 const ProgressBar = require('progress');
 
 const provider = utils.getProvider(config.network);
-const alchemy = new Alchemy(config);
+const alchemy = new Alchemy({ ...config, network: config.alchemyNetwork });
 const dater = new EthDater(alchemy.core);
 
-const treasuryData = JSON.parse(fs.readFileSync('treasury_data.json', 'utf-8')).filter(org => org.chainID == config.network)//.slice(0, 1);;
+const treasuryData = JSON.parse(fs.readFileSync('treasury_data.json', 'utf-8')).filter(org => org.chainID == config.network)
+// Hardcode USDC address in all treasuries to only track this token. 
+// Problems arise if that's not the case.
+treasuryData.forEach(org => {
+  org.token_addresses = ['0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'];
+});
 const tokens = Array.from(new Set(treasuryData.flatMap(org => org.token_addresses)));
 const timestamps = JSON.parse(fs.readFileSync('timestamps.json', 'utf-8'));
 const correctedTimestamps = timestamps.map(ts =>
@@ -21,7 +26,7 @@ const correctedTimestamps = timestamps.map(ts =>
 // const coinInfoMap = JSON.parse(fs.readFileSync('coin_info.json', 'utf-8'));
 
 async function getBalances() {
-  const decimalsMap = await fetchTokenDecimals(tokens, 'eth-mainnet', provider, abi);
+  const decimalsMap = await fetchTokenDecimals(tokens, config.network, provider, abi);
 
   const progressBar = new ProgressBar('Processing block :block [:bar] :percent :etas', {
     total: correctedTimestamps.length,

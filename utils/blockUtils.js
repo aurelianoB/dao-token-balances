@@ -1,5 +1,6 @@
 const { ethers } = require('ethers');
-const { Multicaller } = require('@snapshot-labs/snapshot.js');
+const snapshot = require('@snapshot-labs/snapshot.js');
+const {Multicaller} = snapshot.utils
 
 async function processTimestamps(timestamps, progressBar, dater, decimalsMap, treasuryData, provider, abi) {
     let results = [];
@@ -13,7 +14,7 @@ async function processTimestamps(timestamps, progressBar, dater, decimalsMap, tr
 }
 
 async function fetchBlockResults(blockNum, treasuryData, provider, abi, decimalsMap) {
-  const multi = new Multicaller(config.network, provider, abi, { blockTag: blockNum });
+  const multi = new Multicaller(provider._network.chainId, provider, abi, { blockTag: blockNum });
   treasuryData.forEach(org => {
       org.token_addresses.forEach(token => {
           multi.call(`${org.treasury_address}.${token}`, token, 'balanceOf', [org.treasury_address]);
